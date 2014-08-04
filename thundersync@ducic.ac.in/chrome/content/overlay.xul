@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<?xml-stylesheet href="chrome://thundersync/skin/overlay.css" type="text/css" ?>
+<overlay id="sample" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+	<script type="application/javascript" src="chrome://thundersync/content/overlay.js" />
+	<!-- A reference to your JavaScript file -->
+	<statusbar id="status-bar">
+		<statusbarpanel id="my-panel" label="Date Is:" />
+	</statusbar>
+  <toolbarpalette id="MailToolbarPalette">
+    <toolbarbutton id="demo-button"
+      class="demo-button toolbarbutton-1"
+      label="Thunder Sync"
+      type="button"
+      oncommand="clickHandler();"
+      />
+  </toolbarpalette>
+</overlay>

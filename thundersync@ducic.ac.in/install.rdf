@@ -4,7 +4,7 @@
 		 xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
 	<Description about="urn:mozilla:install-manifest">
-		<em:id>prashant@ducic.ac.in</em:id>
+		<em:id>thundersync@ducic.ac.in</em:id>
 		<em:name>Thunder Sync</em:name>
 		<em:version>1.0</em:version>
 		<em:creator>Prashant Sinha, Pragya Jaiswal</em:creator>
@@ -13,7 +13,7 @@
 			<Description>
 				<em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
 				<em:minVersion>1.5</em:minVersion>
-				<em:maxVersion>5.0.*</em:maxVersion>
+				<em:maxVersion>9.0.*</em:maxVersion>
 			</Description>
 		</em:targetApplication>
 	 

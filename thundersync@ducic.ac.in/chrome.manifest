@@ -1,0 +1,5 @@
+content     thundersync    chrome/content/
+
+
+overlay chrome://messenger/content/messenger.xul chrome://thundersync/content/overlay.xul
+style chrome://global/content/customizeToolbar.xul chrome://thundersync/skin/overlay.css
