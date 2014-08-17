@@ -1,63 +1,35 @@
 window.addEventListener("load", function(e) {
 	TABS_Class.putStatus();
-	TABS_Class.putStatus("TABS is ready.", 2000);
+	TABS_Class.putStatus("TABS Init.", 2000);
 }, false);
 
 var TABS_Config = {
-	serverURI : "http://erp:71/dev/echo",
+	serverURI : "http://erp:71/dev/bit/in.ac.ducic.tabs/getJSON",
 	serverRequestType : "POST",
 	serverAUTHData : {
 		UserName : 'Prashant',
 		Token : 'SOMETHING'
 	},
 	addressBookName : 'MSME',
-	idleStatus : "TABS Task Done"
+	idleStatus : "TABS Idle."
 };
 
 var TABS_Class = {
-	addIntoAddressBook : function(abInstance, CardsData) {
-		CardsData = {
-			FirstName : "FirstName",
-			LastName : "LastName",
-			DisplayName : "DisplayName",
-			NickName : "NickName",
-			PrimaryEmail : "PrimaryEmail",
-			SecondEmail : "SecondEmail",
-			_AimScreenName : "_AimScreenName",
-			HomeAddress : "HomeAddress",
-			HomeAddress2 : "HomeAddress2",
-			HomeCity : "HomeCity",
-			HomeState : "HomeState",
-			HomeZipCode : "HomeZipCode",
-			HomeCountry : "HomeCountry",
-			HomePhone : "HomePhone",
-			HomePhoneType : "HomePhoneType",
-			WorkAddress : "WorkAddress",
-			WorkAddress2 : "WorkAddress2",
-			WorkCity : "WorkCity",
-			WorkState : "WorkState",
-			WorkZipCode : "WorkZipCode",
-			WorkCountry : "WorkCountry",
-			WorkPhone : "WorkPhone",
-			WorkPhoneType : "WorkPhoneType",
-			JobTitle : "JobTitle",
-			Department : "Department",
-			Company : "Company",
-			CellularNumber : "CellularNumber",
-		};
-
-		Things = [CardsData, CardsData];
-
+	addIntoAddressBook : function(abInstance, CardsData, Callback) {
+		if (!TABS_Class.validateData()) {
+			TABS_Class.putStatus("Sync Data Error.");
+			return;
+		}
 		if ( abInstance != null ) {
 			var abURI = abInstance.URI;
 			var abCard = Components.classes["@mozilla.org/addressbook/cardproperty;1"].
 				createInstance(Components.interfaces.nsIAbCard);
 
 			try {
-				for (var i = 0; i < Things.length; i++) {
-					CardData = Things[i];
-					alert(JSON.stringify(CardData));
-					alert(i+"LastName"+(typeof CardData.LastName ? CardData.LastName : ""));
+				for (var i = 0; i < CardsData.length; i++) {
+					CardData = CardsData[i];
+					//alert(JSON.stringify(CardData));
+					//alert(i+"LastName"+(typeof CardData.LastName ? CardData.LastName : ""));
 					abCard.setProperty("FirstName", typeof CardData.FirstName ? CardData.FirstName : "");
 					abCard.setProperty("LastName", typeof CardData.LastName ? CardData.LastName : "");
 					abCard.setProperty("DisplayName", typeof CardData.DisplayName ? CardData.DisplayName : "");
@@ -86,15 +58,20 @@ var TABS_Class = {
 					abCard.setProperty("Company", typeof CardData.Company ? CardData.Company : "");
 					abCard.setProperty("CellularNumber", typeof CardData.CellularNumber ? CardData.CellularNumber : "");
 					abInstance.addCard(abCard);
+					if (i == CardsData.length-1) {
+						Callback ? Callback(i+1) : false;
+					}
 				};
 			}
 			catch(e) {
 				// SHOW ERROR STATUS
-				alert(e);
+				//alert(e);
+				TABS_Class.putStatus("Some Error Occured.");
 			}
 		}
 		else {
 			// SHOW NULL STATUS.
+			TABS_Class.putStatus("Could Not find the Addressbook.");
 		}
 	},
 
@@ -103,13 +80,21 @@ var TABS_Class = {
 	 * @author Prashant Sinha, prashantsinha@outlook.com
 	 */
 	buttonClick : function() {
-		TABS_Class.putStatus("TABS Sending...", 1000);
+		TABS_Class.putStatus("TABS Syncing");
 
 		TABS_Class.fetchFromServer(
 			function(data){
 				TABS_Class.initAddressBook(
 					function(ab) {
-						TABS_Class.addIntoAddressBook(ab, data);
+						TABS_Class.addIntoAddressBook(
+							ab,
+							data,
+							function(number) {
+								TABS_Class.putStatus("Synchronization Complete.", 5000);
+								setTimeout(function(){
+									alert("Synchronized "+number+" Contacts from the Server.");
+								}, 2000)
+							});
 					},
 					function() {
 						TABS_Class.putStatus("ERROR Canot Find Addressbook");
@@ -144,7 +129,7 @@ var TABS_Class = {
 			var data;
 			if (xhr.readyState == 4) {
 				status = xhr.status;
-				if (status == 200) {
+				if (status == 251) {		//Custom Header
 					data = JSON.parse(xhr.responseText);
 					nextAction && nextAction(data);
 				} else {
@@ -171,7 +156,7 @@ var TABS_Class = {
 
 			var directories = [];
 			directories = abManager.directories;
-			alert(Object.getOwnPropertyNames(directories));
+			//alert(Object.getOwnPropertyNames(directories));
 			var flag = false;
 			while (directories.hasMoreElements()) {
 				addressBook = directories.getNext().QueryInterface(Components.interfaces.nsIAbDirectory);
@@ -207,7 +192,7 @@ var TABS_Class = {
 			nextAction(ab);
 		}
 		catch(err) {
-			alert("ERROR" + err);
+			//alert("ERROR" + err);
 		}
 	},
 
@@ -232,7 +217,6 @@ var TABS_Class = {
 	},
 
 	validateData: function(data) {
-		//
-
+		return true;
 	}
 };
