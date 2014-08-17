@@ -15,13 +15,38 @@ var TABS_Config = {
 };
 
 var TABS_Class = {
-	addIntoAddressBook : function(abInstance, CardData) {
-		CardData = CardData ? CardData : {
-			Name : 'Mr. Leo Waldez',
-			FirstName: 'Leo',
-			LastName: 'Waldez',
-			EMail: 'waldez@camphalfbood.com'
+	addIntoAddressBook : function(abInstance, CardsData) {
+		CardsData = {
+			FirstName : "FirstName",
+			LastName : "LastName",
+			DisplayName : "DisplayName",
+			NickName : "NickName",
+			PrimaryEmail : "PrimaryEmail",
+			SecondEmail : "SecondEmail",
+			_AimScreenName : "_AimScreenName",
+			HomeAddress : "HomeAddress",
+			HomeAddress2 : "HomeAddress2",
+			HomeCity : "HomeCity",
+			HomeState : "HomeState",
+			HomeZipCode : "HomeZipCode",
+			HomeCountry : "HomeCountry",
+			HomePhone : "HomePhone",
+			HomePhoneType : "HomePhoneType",
+			WorkAddress : "WorkAddress",
+			WorkAddress2 : "WorkAddress2",
+			WorkCity : "WorkCity",
+			WorkState : "WorkState",
+			WorkZipCode : "WorkZipCode",
+			WorkCountry : "WorkCountry",
+			WorkPhone : "WorkPhone",
+			WorkPhoneType : "WorkPhoneType",
+			JobTitle : "JobTitle",
+			Department : "Department",
+			Company : "Company",
+			CellularNumber : "CellularNumber",
 		};
+
+		Things = [CardsData, CardsData];
 
 		if ( abInstance != null ) {
 			var abURI = abInstance.URI;
@@ -30,13 +55,16 @@ var TABS_Class = {
 
 			try {
 				for (var i = 0; i < Things.length; i++) {
-					//Things[i]
+					CardData = Things[i];
+					alert(JSON.stringify(CardData));
+					alert(i+"LastName"+(typeof CardData.LastName ? CardData.LastName : ""));
 					abCard.setProperty("FirstName", typeof CardData.FirstName ? CardData.FirstName : "");
 					abCard.setProperty("LastName", typeof CardData.LastName ? CardData.LastName : "");
 					abCard.setProperty("DisplayName", typeof CardData.DisplayName ? CardData.DisplayName : "");
 					abCard.setProperty("NickName", typeof CardData.NickName ? CardData.NickName : "");
 					abCard.setProperty("PrimaryEmail", typeof CardData.PrimaryEmail ? CardData.PrimaryEmail : "");
 					abCard.setProperty("SecondEmail", typeof CardData.SecondEmail ? CardData.SecondEmail : "");
+					abCard.setProperty("_AimScreenName", typeof CardData._AimScreenName ? CardData._AimScreenName : "");
 					abCard.setProperty("HomeAddress", typeof CardData.HomeAddress ? CardData.HomeAddress : "");
 					abCard.setProperty("HomeAddress2", typeof CardData.HomeAddress2 ? CardData.HomeAddress2 : "");
 					abCard.setProperty("HomeCity", typeof CardData.HomeCity ? CardData.HomeCity : "");
@@ -57,12 +85,12 @@ var TABS_Class = {
 					abCard.setProperty("Department", typeof CardData.Department ? CardData.Department : "");
 					abCard.setProperty("Company", typeof CardData.Company ? CardData.Company : "");
 					abCard.setProperty("CellularNumber", typeof CardData.CellularNumber ? CardData.CellularNumber : "");
-					abCard.setProperty("CellularNumberType", typeof CardData.CellularNumberType ? CellularNumberType : "");
 					abInstance.addCard(abCard);
 				};
 			}
 			catch(e) {
 				// SHOW ERROR STATUS
+				alert(e);
 			}
 		}
 		else {
