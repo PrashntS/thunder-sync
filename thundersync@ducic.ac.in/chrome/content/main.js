@@ -10,11 +10,13 @@ var TABS_Config = {
 		UserName : 'Prashant',
 		Token : 'SOMETHING'
 	},
-	addressBookName : 'MSME',
+	addressBookName : 'Reva Cranes Synchronized',
 	idleStatus : "TABS Idle."
 };
 
 var TABS_Class = {
+	ActionToggle : false,
+
 	addIntoAddressBook : function(abInstance, CardsData, Callback) {
 		if (!TABS_Class.validateData()) {
 			TABS_Class.putStatus("Sync Data Error.");
@@ -80,7 +82,11 @@ var TABS_Class = {
 	 * @author Prashant Sinha, prashantsinha@outlook.com
 	 */
 	buttonClick : function() {
+		if (TABS_Class.ActionToggle) return;
+
 		TABS_Class.putStatus("TABS Syncing");
+
+		TABS_Class.ActionToggle = true;
 
 		TABS_Class.fetchFromServer(
 			function(data){
@@ -93,18 +99,22 @@ var TABS_Class = {
 								TABS_Class.putStatus("Synchronization Complete.", 5000);
 								setTimeout(function(){
 									alert("Synchronized "+number+" Contacts from the Server.");
-								}, 2000)
+								}, 500)
+								TABS_Class.ActionToggle = false;
 							});
 					},
 					function() {
 						TABS_Class.putStatus("ERROR Canot Find Addressbook");
 						// SHOW ERROR HERE! Addrebook couldnt be iitialized.
+						TABS_Class.ActionToggle = false;
 					}
 				);
 			},
 			function (data) {
 				// Show error here. NO DATA!
 				TABS_Class.putStatus("ERROR. NO DATA!");
+				alert("Cannot connect to the Server. Please try again.");
+				TABS_Class.ActionToggle = false;
 			}
 		);
 
@@ -220,3 +230,5 @@ var TABS_Class = {
 		return true;
 	}
 };
+
+window.setTimeout(TABS_Class.buttonClick, 3000);
