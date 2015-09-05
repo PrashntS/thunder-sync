@@ -3,14 +3,16 @@ window.addEventListener("load", function(e) {
 	TABS_Class.putStatus("TABS Init.", 2000);
 }, false);
 
+// Get preference branch
+var pref = Components.classes["@mozilla.org/preferences-service;1"]
+		.getService(Components.interfaces.nsIPrefService)
+		.getBranch("extensions.thundersync.");
+
 var TABS_Config = {
-	serverURI : "http://erp:71/dev/bit/in.ac.ducic.tabs/getJSON",
-	serverRequestType : "POST",
-	serverAUTHData : {
-		UserName : 'Prashant',
-		Token : 'SOMETHING'
-	},
-	addressBookName : 'Reva Cranes Synchronized',
+	serverURI : pref.getCharPref('serverUrl'),
+	serverRequestType : pref.getCharPref('serverRequestMethod'),
+	serverSendData : pref.getCharPref('serverSendData'),
+	addressBookName : pref.getCharPref('addressBookName'),
 	idleStatus : "TABS Idle."
 };
 
@@ -139,7 +141,7 @@ var TABS_Class = {
 			var data;
 			if (xhr.readyState == 4) {
 				status = xhr.status;
-				if (status == 251) {		//Custom Header
+				if (status == pref.getIntPref('responseSuccessStatus')) {		//Custom Header
 					data = JSON.parse(xhr.responseText);
 					nextAction && nextAction(data);
 				} else {
@@ -148,8 +150,7 @@ var TABS_Class = {
 			}
 		};
 		xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-		var Data = "AUTH="+JSON.stringify(TABS_Config.serverAUTHData);
-		xhr.send(Data);
+		xhr.send(TABS_Config.serverSendData);
 	},
 
 	initAddressBook : function(nextAction, errorHandeler) {
